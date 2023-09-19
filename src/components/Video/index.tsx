@@ -1,7 +1,11 @@
 import ReactPlayer from "react-player";
 import { useAppSelector } from "../../store";
+import { useDispatch } from "react-redux";
+import { next } from "../../store/slices/player";
 
 export const Video = () => {
+  const dispatch = useDispatch();
+
   const lesson = useAppSelector((state) => {
     const { currentModuleIndex, currentLessonIndex } = state.player;
 
@@ -13,6 +17,10 @@ export const Video = () => {
     return currentLesson;
   });
 
+  const handleNextPlay = () => {
+    dispatch(next());
+  };
+
   return (
     <div className="w-ful bg-zinc-950 aspect-video">
       <ReactPlayer
@@ -21,6 +29,7 @@ export const Video = () => {
         height="100%"
         controls
         playing
+        onEnded={handleNextPlay}
       />
     </div>
   );
