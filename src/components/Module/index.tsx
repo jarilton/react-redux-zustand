@@ -25,7 +25,7 @@ export const Module: React.FC<ModuleProps> = ({
   });
 
   const lessons = useAppSelector(
-    (state) => state.player.course.modules[moduleIndex].lessons
+    (state) => state.player.course?.modules[moduleIndex].lessons
   );
 
   return (
@@ -43,23 +43,24 @@ export const Module: React.FC<ModuleProps> = ({
       </Collapsible.Trigger>
       <Collapsible.Content>
         <nav className="relative flex flex-col gap-4 p-6">
-          {lessons.map((lesson, lessonIndex) => {
-            const isCurrent =
-              lessonIndex === currentLessonIndex &&
-              moduleIndex === currentModuleIndex;
+          {lessons &&
+            lessons.map((lesson, lessonIndex) => {
+              const isCurrent =
+                lessonIndex === currentLessonIndex &&
+                moduleIndex === currentModuleIndex;
 
-            return (
-              <Lesson
-                key={lesson.id}
-                title={lesson.title}
-                duration={lesson.duration}
-                onPlay={() => {
-                  dispatch(play([moduleIndex, lessonIndex]));
-                }}
-                isCurrent={isCurrent}
-              />
-            );
-          })}
+              return (
+                <Lesson
+                  key={lesson.id}
+                  title={lesson.title}
+                  duration={lesson.duration}
+                  onPlay={() => {
+                    dispatch(play([moduleIndex, lessonIndex]));
+                  }}
+                  isCurrent={isCurrent}
+                />
+              );
+            })}
         </nav>
       </Collapsible.Content>
     </Collapsible.Root>

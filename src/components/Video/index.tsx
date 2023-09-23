@@ -11,6 +11,8 @@ export const Video = () => {
     dispatch(next());
   };
 
+  if (!currentLesson) return null;
+
   return (
     <div className="w-ful bg-zinc-950 aspect-video">
       <ReactPlayer
