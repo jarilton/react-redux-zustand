@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { api } from "../services/api";
 
 interface Course {
   id: number;
@@ -19,6 +20,7 @@ export interface playerState {
   isLoading: boolean;
   play: (moduleAndLessonIndex: [number, number]) => void;
   next: () => void;
+  load: () => Promise<void>;
 }
 
 export const useStore = create<playerState>((set, get) => {
@@ -27,6 +29,17 @@ export const useStore = create<playerState>((set, get) => {
     currentModuleIndex: 0,
     currentLessonIndex: 0,
     isLoading: true,
+
+    load: async () => {
+      set({ isLoading: true });
+
+      const response = await api.get("/courses/1");
+
+      set({
+        course: response.data,
+        isLoading: false,
+      });
+    },
 
     play: (moduleAndLessonIndex: [number, number]) => {
       const [moduleIndex, lessonIndex] = moduleAndLessonIndex;
@@ -55,3 +68,15 @@ export const useStore = create<playerState>((set, get) => {
     },
   };
 });
+
+export const useCurrentLesson = () => {
+  return useStore((state) => {
+    const { currentModuleIndex, currentLessonIndex } = state;
+
+    const currentModule = state.course?.modules[currentModuleIndex];
+    const currentLesson =
+      state.course?.modules[currentModuleIndex].lessons[currentLessonIndex];
+
+    return { currentModule, currentLesson };
+  });
+};
